@@ -1,6 +1,4 @@
-import shapeless.{HList, ::, HNil}
-import shapeless.Lazy
-import shapeless.Generic
+import shapeless.{ ::, Generic, HList, HNil, Lazy }
 
 // our friends from representations
 final case class Employee(
@@ -26,21 +24,13 @@ object CsvEncoder {
         func(value)
     }
 
-  // hand implemented encoders...
-  implicit val employeeEnc: CsvEncoder[Employee] =
-    pure(e => List(
-      e.name,
-      e.number.toString,
-      if (e.manager) "yes" else "no"
-    ))
+  // will instead declare type classes for HLists; need two instances
 
-  // ....lots of boiler plate
-  implicit val iceCreamEnc: CsvEncoder[IceCream] =
-    pure(e => List(
-      e.name,
-      e.numCherries.toString,
-      if (e.inCone) "yes" else "no"
-    ))
+  // Empty HList
+  implicit val hnilEnc: CsvEncoder[HNil] = ???
+
+  // Non-Empty HList
+  implicit def hlistEnc[H, T <: HList ]: CsvEncoder[H :: T] = ???
 }
 
 object Main extends Demo {
@@ -50,6 +40,6 @@ object Main extends Demo {
   val employee = Employee("Bill", 1, true)
   val iceCream = IceCream("Cornetto", 0, true)
 
-  println(encodeCsv(employee))
-  println(encodeCsv(iceCream)(CsvEncoder.iceCreamEnc))
+  //println(encodeCsv(employee))
+  //println(encodeCsv(iceCream))
 }
