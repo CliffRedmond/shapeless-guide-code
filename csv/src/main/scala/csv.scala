@@ -52,10 +52,10 @@ object CsvEncoder {
     }
 
   // now we declare a generic encoder
-  implicit def genericEnc[A](
+  implicit def genericEnc[A,R](
     implicit
-    gen: Generic[A], // will turn A into an HList
-    enc: CsvEncoder[gen.Repr] // will turn HList into CSV
+    gen: Generic[A] {type Repr = R /*a type refinement to link R to Repr*/}, // will turn A into an HList
+    enc: CsvEncoder[R] // will turn HList into CSV
   ): CsvEncoder[A] = ???
 
   // An aside:
