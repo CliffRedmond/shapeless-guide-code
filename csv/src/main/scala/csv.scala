@@ -50,6 +50,13 @@ object CsvEncoder {
       case h :: t =>
         hEnc.encode(h) ++ tEnc.encode(t)
     }
+
+  // now we declare a generic encoder
+  implicit def genericEnc[A](
+    implicit
+    gen: Generic[A], // will turn A into an HList
+    enc: CsvEncoder[???] // will turn HList into CSV
+  ): CsvEncoder[A] = ???
 }
 
 object Main extends Demo {
