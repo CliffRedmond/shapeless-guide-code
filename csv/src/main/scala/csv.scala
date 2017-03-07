@@ -55,8 +55,19 @@ object CsvEncoder {
   implicit def genericEnc[A](
     implicit
     gen: Generic[A], // will turn A into an HList
-    enc: CsvEncoder[???] // will turn HList into CSV
+    enc: CsvEncoder[gen.Repr] // will turn HList into CSV
   ): CsvEncoder[A] = ???
+
+  // An aside:
+  //    definition of Generic
+  trait Generic[A] {
+    type Repr // an abstract type member -> like a type parameter, but better for mixins
+    def to(a: A): Repr
+    def from(repr: Repr): A
+  }
+
+  def makeGeneric[A](a: A, gen: Generic[A]) = gen.to(a)
+
 }
 
 object Main extends Demo {
