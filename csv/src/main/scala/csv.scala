@@ -41,10 +41,14 @@ object CsvEncoder {
     pure(hnil => Nil)
 
   // Non-Empty HList
-  implicit def hlistEnc[H, T <: HList ]: CsvEncoder[H :: T] =
+  implicit def hlistEnc[H, T <: HList ](
+    implicit
+    hEnc: CsvEncoder[H],
+    tEnc: CsvEncoder[T]
+  ): CsvEncoder[H :: T] =
     pure {
       case h :: t =>
-        encode(h) ++ encode(t)
+        hEnc.encode(h) ++ tEnc.encode(t)
     }
 }
 
@@ -55,7 +59,12 @@ object Main extends Demo {
   val employee = Employee("Bill", 1, true)
   val iceCream = IceCream("Cornetto", 0, true)
 
-  println(encodeCsv(true))
+  //println(encodeCsv(true))
+
+  println(encodeCsv("Hello" :: "Acme" :: true :: "is" :: 1 :: HNil))
+
+  println(encodeCsv(Generic[Employee].to(employee)))
+  println(encodeCsv(Generic[IceCream].to(iceCream)))
 
   //println(encodeCsv(employee))
   //println(encodeCsv(iceCream))
