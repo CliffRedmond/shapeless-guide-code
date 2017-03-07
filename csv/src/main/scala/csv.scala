@@ -24,6 +24,16 @@ object CsvEncoder {
         func(value)
     }
 
+  // add helper encoders 
+  implicit val stringEncoder: CsvEncoder[String] =
+    pure(str => List(str))
+
+  implicit val intEncoder: CsvEncoder[Int] =
+    pure(num => List(num.toString))
+
+  implicit val booleanEncoder: CsvEncoder[Boolean] =
+    pure(bool => List(if (bool) "yes" else "no"))
+
   // will instead declare type classes for HLists; need two instances
 
   // Empty HList
@@ -39,6 +49,8 @@ object Main extends Demo {
 
   val employee = Employee("Bill", 1, true)
   val iceCream = IceCream("Cornetto", 0, true)
+
+  println(encodeCsv(true))
 
   //println(encodeCsv(employee))
   //println(encodeCsv(iceCream))
