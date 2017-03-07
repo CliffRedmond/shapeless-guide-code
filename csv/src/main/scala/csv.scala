@@ -37,10 +37,15 @@ object CsvEncoder {
   // will instead declare type classes for HLists; need two instances
 
   // Empty HList
-  implicit val hnilEnc: CsvEncoder[HNil] = ???
+  implicit val hnilEnc: CsvEncoder[HNil] =
+    pure(hnil => Nil)
 
   // Non-Empty HList
-  implicit def hlistEnc[H, T <: HList ]: CsvEncoder[H :: T] = ???
+  implicit def hlistEnc[H, T <: HList ]: CsvEncoder[H :: T] =
+    pure {
+      case h :: t =>
+        encode(h) ++ encode(t)
+    }
 }
 
 object Main extends Demo {
