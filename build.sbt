@@ -7,7 +7,7 @@ scalacOptions in Global ++= Seq(
   "-unchecked",
   "-feature",
   "-Xlint",
-  "-Xfatal-warnings",
+  //"-Xfatal-warnings",
   "-Ywarn-dead-code",
   "-Yliteral-types"
 )
