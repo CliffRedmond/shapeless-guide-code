@@ -1,4 +1,4 @@
-import shapeless.{ ::, Generic, HList, HNil, Lazy }
+import shapeless.{ ::, Generic, HList, HNil }
 
 // our friends from representations
 final case class Employee(
@@ -56,17 +56,8 @@ object CsvEncoder {
     implicit
     gen: Generic[A] {type Repr = R /*a type refinement to link R to Repr*/}, // will turn A into an HList
     enc: CsvEncoder[R] // will turn HList into CSV
-  ): CsvEncoder[A] = ???
-
-  // An aside:
-  //    definition of Generic
-  trait Generic[A] {
-    type Repr // an abstract type member -> like a type parameter, but better for mixins
-    def to(a: A): Repr
-    def from(repr: Repr): A
-  }
-
-  def makeGeneric[A](a: A, gen: Generic[A]) = gen.to(a)
+  ): CsvEncoder[A] =
+    pure(a => enc.encode(gen.to(a)))
 
 }
 
@@ -81,8 +72,8 @@ object Main extends Demo {
 
   println(encodeCsv("Hello" :: "Acme" :: true :: "is" :: 1 :: HNil))
 
-  println(encodeCsv(Generic[Employee].to(employee)))
-  println(encodeCsv(Generic[IceCream].to(iceCream)))
+  println(encodeCsv(employee))
+  println(encodeCsv(iceCream))
 
   //println(encodeCsv(employee))
   //println(encodeCsv(iceCream))
